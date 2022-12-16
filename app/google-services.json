@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "456424167592",
+    "project_id": "memorymaster-f1a52",
+    "storage_bucket": "memorymaster-f1a52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456424167592:android:e6f28e32f3d56b661b8a9d",
+        "android_client_info": {
+          "package_name": "com.example.memorymaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "456424167592-8dcu2ngmbqq8ojr1u6jovn8e7nt6rtjo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdoho9OYxWe-lrnUBGkom6BGOfU0SxBYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "456424167592-8dcu2ngmbqq8ojr1u6jovn8e7nt6rtjo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
