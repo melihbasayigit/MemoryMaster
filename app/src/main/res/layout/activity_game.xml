@@ -31,12 +31,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewScore" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewGameArea"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewScore2"
-        tools:itemCount="16"
+        tools:itemCount="36"
         tools:layoutManager="GridLayoutManager"
         tools:listitem="@layout/recycler_view_item"
         tools:spanCount="5" />

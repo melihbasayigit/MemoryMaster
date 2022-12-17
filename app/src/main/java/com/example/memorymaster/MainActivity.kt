@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -123,26 +122,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun readCard(cardId: Int) {
-        val db = Firebase.firestore
-        val docRef = db.collection("cards").document(cardId.toString())
-        docRef.get().addOnSuccessListener { documentSnapshot ->
-            if (documentSnapshot.data != null) {
-                Log.d("melih", documentSnapshot.data!!["cardHouse"] as String)
-            }
-        }
-    }
-
-    private fun convertStringToImage(base64String: String): Bitmap {
-        val decodedString = android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-    }
-
-
     private fun switchMenuActivity() {
         val i = Intent(this@MainActivity, MenuActivity::class.java)
         i.putExtra("email", auth.currentUser?.email)
-        i.putExtra("uid",auth.currentUser?.uid)
+        i.putExtra("uid", auth.currentUser?.uid)
         startActivity(i)
     }
 
