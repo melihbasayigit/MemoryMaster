@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">MemoryMaster</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="password">Password</string>
+    <string name="email">Email Address</string>
+    <string name="play_singleplayer">Play Single-player</string>
+    <string name="play_2_players">Play 2 Players</string>
+    <string name="mute">Mute</string>
+    <string name="easy_difficulty">2x2 EASY</string>
+    <string name="normal_difficulty">4x4 NORMAL</string>
+    <string name="hard_difficulty">6x6 HARD</string>
+    <string name="play">PLAY</string>
+    <string name="reset_password">Forgot Password ?</string>
+    <string name="change_password">Change Password</string>
 </resources>
