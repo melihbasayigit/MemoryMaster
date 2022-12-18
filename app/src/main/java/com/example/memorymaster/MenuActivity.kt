@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.example.memorymaster.databinding.ActivityMenuBinding
 
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
+    private var score:Float? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +22,10 @@ class MenuActivity : AppCompatActivity() {
         }
         binding.textViewUserId.text = intent.getStringExtra("uid")
         binding.textViewUserEmail.text = intent.getStringExtra("email")
-
+        score = intent.getFloatExtra("score", -10000.0f)
+        if (score != -10000.0f) {
+            Toast.makeText(this, "Game over your score is: $score",Toast.LENGTH_LONG).show()
+        }
 
     }
 
