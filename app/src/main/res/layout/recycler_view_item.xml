@@ -3,6 +3,7 @@
     android:id="@+id/recyclerViewItemImageView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="0dp"
+    android:background="@color/white"
     tools:src="@tools:sample/avatars"
     android:contentDescription="recyclerViewItem" />

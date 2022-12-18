@@ -47,6 +47,7 @@ class DifficultyFragment : Fragment() {
 
     private fun playGame(difficulty:Int) {
         val gamePage = Intent(activity, GameActivity::class.java)
+        gamePage.putExtra("difficulty", difficulty)
         requireContext().startActivity(gamePage)
     }
 
