@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.textViewForgotPassword.setOnClickListener {
-            resetPassword(binding.editTextTextEmailAddress.text.toString())
+            resetPassword(binding.editTextTextEmailAddress.text.toString().trim { it <= ' ' })
         }
 
 
