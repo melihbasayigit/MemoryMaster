@@ -20,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import java.io.File
 import java.io.FileReader
 import kotlin.random.Random
 
@@ -71,7 +72,6 @@ class GameCardAdapter(
         holder.binding.recyclerViewItemImageView.setImageResource(R.drawable.card_bg)
         val scoreText = gameActivity.findViewById<TextView>(R.id.textViewScore)
         timeText = gameActivity.findViewById(R.id.textViewTime)
-        addDbArea()
         holder.binding.recyclerViewItemImageView.setOnClickListener {
             if (!timerStart) {
                 timerStart = true
@@ -183,8 +183,5 @@ class GameCardAdapter(
         score += totalPoint
     }
 
-    private fun addDbArea() {
-
-    }
 
 }

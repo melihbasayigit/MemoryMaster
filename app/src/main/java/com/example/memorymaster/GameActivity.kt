@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Environment
 import android.util.Base64
 import android.util.Log
 import android.widget.TextView
@@ -18,6 +19,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.PrintWriter
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 import kotlin.time.Duration
 
@@ -31,7 +37,7 @@ class GameActivity : AppCompatActivity() {
     private val hufflepuffCards = ArrayList<Card>()
     private val cardList = ArrayList<Card>()
     private val allCards = ArrayList<Card>()
-    private var multi:Boolean? = null
+    private var multi: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,11 +71,9 @@ class GameActivity : AppCompatActivity() {
             for (card in allCards) {
                 if (card.cardHouse.lowercase() == "hufflepuff") {
                     hufflepuffCards.add(card)
-                }
-                else if (card.cardHouse.lowercase() == "gryffindor") {
+                } else if (card.cardHouse.lowercase() == "gryffindor") {
                     gryffindorCards.add(card)
-                }
-                else if (card.cardHouse.lowercase() == "ravenclaw") {
+                } else if (card.cardHouse.lowercase() == "ravenclaw") {
                     ravenclawCards.add(card)
                 } else {
                     slytherinCards.add(card)
@@ -127,12 +131,34 @@ class GameActivity : AppCompatActivity() {
             cardList += cardList
             cardList.shuffle()
             //
-            val adapterCard = GameCardAdapter(cardList,this, this@GameActivity, multi)
-            binding.recyclerViewGameArea.adapter = adapterCard
-        }
-            .addOnFailureListener { e ->
-                Log.d("melih", "There is no document ${e.message}")
+            val map = hashMapOf<String, Any>()
+            var counter = 0
+            var longString = ""
+            cardList.forEach {
+                map.put(counter.toString(), "${it.cardId} -> ${it.cardName} ${it.cardHouse} ")
+                longString += "$counter -> ${it.cardName} ${it.cardHouse} ${it.cardId}\n"
+                counter++
             }
+            Log.d("melih", longString)
+            //
+            val adapterCard = GameCardAdapter(cardList, this, this@GameActivity, multi)
+            binding.recyclerViewGameArea.adapter = adapterCard
+            //
+
+
+            db.collection("area").document("last_game").set(map)
+                .addOnFailureListener { e -> Log.d("melih", e.message.toString()) }
+                .addOnSuccessListener { Log.d("melih", "Everything is ok 1.") }
+
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")
+            val current = LocalDateTime.now().format(formatter)
+
+            db.collection("area").document(current).set(map)
+                .addOnSuccessListener { e -> Log.d("melih", "Everything is ok 2.") }
+                .addOnFailureListener { e -> Log.d("melih", "There is no document ${e.message}") }
+
+        }
+
     }
 
     /*
