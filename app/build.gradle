@@ -46,6 +46,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.2'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     testImplementation 'junit:junit:4.13.2'
     implementation("androidx.fragment:fragment-ktx:1.5.5")
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'

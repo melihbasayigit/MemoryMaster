@@ -1,18 +1,25 @@
 package com.example.memorymaster
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Base64
 import android.util.Log
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorymaster.databinding.ActivityGameBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
 import kotlin.random.Random
+import kotlin.time.Duration
 
 class GameActivity : AppCompatActivity() {
 
@@ -31,14 +38,11 @@ class GameActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         difficulty = intent.getIntExtra("difficulty", 1)
-        Log.d("melih", "burya giriyor mu $difficulty")
         val spanCount = 2 * difficulty!!
         binding.recyclerViewGameArea.layoutManager = GridLayoutManager(this, spanCount)
-        val adapter = GameCardAdapter(cardList)
-        binding.recyclerViewGameArea.adapter = adapter
         getCards()
-
     }
+
 
     private fun getCards() {
         val db = Firebase.firestore
@@ -49,7 +53,8 @@ class GameActivity : AppCompatActivity() {
                     document.data["cardName"].toString(),
                     document.data["cardHouse"].toString(),
                     document.data["cardPoint"].toString().toInt(),
-                    document.data["cardImage"].toString()
+                    document.data["cardImage"].toString(),
+                    false
                 )
                 allCards.add(card)
             }
@@ -118,7 +123,8 @@ class GameActivity : AppCompatActivity() {
             }
             cardList += cardList
             cardList.shuffle()
-            val adapterCard = GameCardAdapter(cardList)
+            //
+            val adapterCard = GameCardAdapter(cardList,this, this@GameActivity)
             binding.recyclerViewGameArea.adapter = adapterCard
         }
             .addOnFailureListener { e ->

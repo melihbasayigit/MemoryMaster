@@ -25,6 +25,7 @@ class MenuActivity : AppCompatActivity() {
         score = intent.getFloatExtra("score", -10000.0f)
         if (score != -10000.0f) {
             Toast.makeText(this, "Game over your score is: $score",Toast.LENGTH_LONG).show()
+            finish()
         }
 
     }

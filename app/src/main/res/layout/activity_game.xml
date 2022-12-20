@@ -7,7 +7,7 @@
     tools:context=".GameActivity">
 
     <TextView
-        android:id="@+id/textViewTime"
+        android:id="@+id/textViewScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Score :"
@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewScore"
+        android:id="@+id/textViewTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Time: "
@@ -41,4 +41,16 @@
         tools:layoutManager="GridLayoutManager"
         tools:listitem="@layout/recycler_view_item"
         tools:spanCount="5" />
+
+    <Button
+        android:id="@+id/muteButtonGameActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mute"
+        android:layout_marginBottom="3dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewGameArea"
+        app:layout_constraintEnd_toStartOf="@+id/textViewTime"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toEndOf="@+id/textViewScore"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
