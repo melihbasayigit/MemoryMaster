@@ -31,6 +31,7 @@ class GameActivity : AppCompatActivity() {
     private val hufflepuffCards = ArrayList<Card>()
     private val cardList = ArrayList<Card>()
     private val allCards = ArrayList<Card>()
+    private var multi:Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,8 @@ class GameActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         difficulty = intent.getIntExtra("difficulty", 1)
+        multi = intent.getBooleanExtra("multi", false)
+        Log.d("melih", multi.toString())
         val spanCount = 2 * difficulty!!
         binding.recyclerViewGameArea.layoutManager = GridLayoutManager(this, spanCount)
         getCards()
@@ -124,7 +127,7 @@ class GameActivity : AppCompatActivity() {
             cardList += cardList
             cardList.shuffle()
             //
-            val adapterCard = GameCardAdapter(cardList,this, this@GameActivity)
+            val adapterCard = GameCardAdapter(cardList,this, this@GameActivity, multi)
             binding.recyclerViewGameArea.adapter = adapterCard
         }
             .addOnFailureListener { e ->

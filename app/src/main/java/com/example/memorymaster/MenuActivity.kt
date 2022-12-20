@@ -10,6 +10,7 @@ import com.example.memorymaster.databinding.ActivityMenuBinding
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
     private var score:Float? = null
+    private var multi = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +19,11 @@ class MenuActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.playSingleplayerButton.setOnClickListener { view ->
+            multi = false
+            difficultyFragment(view)
+        }
+        binding.play2PlayersButton.setOnClickListener { view ->
+            multi = true
             difficultyFragment(view)
         }
         binding.textViewUserId.text = intent.getStringExtra("uid")
@@ -34,7 +40,7 @@ class MenuActivity : AppCompatActivity() {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val fragment = DifficultyFragment()
+        val fragment = DifficultyFragment(multi)
         fragmentTransaction.replace(R.id.frameLayout, fragment).commit()
     }
 

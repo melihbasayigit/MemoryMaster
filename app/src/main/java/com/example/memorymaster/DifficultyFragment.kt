@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.core.view.get
 import com.example.memorymaster.databinding.FragmentDifficultyBinding
 
-class DifficultyFragment : Fragment() {
+class DifficultyFragment(val multi:Boolean) : Fragment() {
 
     private var _binding: FragmentDifficultyBinding? = null
     private val binding get() = _binding!!
@@ -48,6 +48,7 @@ class DifficultyFragment : Fragment() {
     private fun playGame(difficulty:Int) {
         val gamePage = Intent(activity, GameActivity::class.java)
         gamePage.putExtra("difficulty", difficulty)
+        gamePage.putExtra("multi", multi)
         requireContext().startActivity(gamePage)
     }
 

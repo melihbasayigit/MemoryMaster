@@ -26,7 +26,8 @@ import kotlin.random.Random
 class GameCardAdapter(
     val cardList: ArrayList<Card>,
     val gameActivity: AppCompatActivity,
-    val parentActivity: GameActivity
+    val parentActivity: GameActivity,
+    val multi:Boolean?
 ) :
     RecyclerView.Adapter<GameCardAdapter.GameCardHolder>() {
     var lastPosition = -1
