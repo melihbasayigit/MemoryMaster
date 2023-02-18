@@ -2,7 +2,6 @@ package com.example.memorymaster.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import com.example.memorymaster.fragment.DifficultyFragment
 import com.example.memorymaster.R
@@ -34,7 +33,6 @@ class MenuActivity : AppCompatActivity() {
             Toast.makeText(this, "Game over your score is: $score",Toast.LENGTH_LONG).show()
             finish()
         }
-
     }
 
     private fun difficultyFragment() {

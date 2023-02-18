@@ -1,17 +1,12 @@
 package com.example.memorymaster.activity
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
 import android.widget.Toast
 import com.example.memorymaster.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
@@ -32,27 +27,26 @@ class MainActivity : AppCompatActivity() {
                 binding.editTextTextPassword.text.toString()
             )
         }
-
         binding.buttonRegisterButton.setOnClickListener {
             register(
                 binding.editTextTextEmailAddress.text.toString().trim { it <= ' ' },
                 binding.editTextTextPassword.text.toString()
             )
         }
-
         binding.textViewForgotPassword.setOnClickListener {
             resetPassword(binding.editTextTextEmailAddress.text.toString().trim { it <= ' ' })
         }
 
-
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        val currentUser = auth.currentUser
+    private fun switchMenuActivity() {
+        val i = Intent(this@MainActivity, MenuActivity::class.java)
+        i.putExtra("email", auth.currentUser?.email)
+        i.putExtra("uid", auth.currentUser?.uid)
+        startActivity(i)
     }
 
-    fun login(email: String, password: String) {
+    private fun login(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 Toast.makeText(
@@ -71,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun register(email: String, password: String) {
+    private fun register(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -89,44 +83,6 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 }
             }
-    }
-
-    private fun addMovement(playerId: Int, selectionFirst: String, selectionSecond: String) {
-        val db = Firebase.firestore
-
-        val movement = hashMapOf(
-            "playerID" to playerId,
-            "firstSelection" to selectionFirst,
-            "secondSelection" to selectionSecond
-        )
-
-        db.collection("movement").add(movement).addOnSuccessListener { result ->
-            Log.d("melih", "completed successfully")
-        }
-            .addOnFailureListener { result ->
-                Log.d("melih", "Error: ${result.printStackTrace()}")
-            }
-    }
-
-    private fun readMovement() {
-        val db = Firebase.firestore
-
-        db.collection("movement").get().addOnSuccessListener { result ->
-            for (document in result) {
-                Log.d("melih", "${document.id} ---> ${document.data}")
-            }
-        }
-            .addOnFailureListener { e ->
-                Log.w("melih", "Error getting method from firestore --> ${e.printStackTrace()}")
-            }
-
-    }
-
-    private fun switchMenuActivity() {
-        val i = Intent(this@MainActivity, MenuActivity::class.java)
-        i.putExtra("email", auth.currentUser?.email)
-        i.putExtra("uid", auth.currentUser?.uid)
-        startActivity(i)
     }
 
     private fun resetPassword(email: String) {
