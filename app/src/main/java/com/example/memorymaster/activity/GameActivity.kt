@@ -1,31 +1,20 @@
-package com.example.memorymaster
+package com.example.memorymaster.activity
 
-import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Environment
 import android.util.Base64
 import android.util.Log
-import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.memorymaster.adapter.GameCardAdapter
 import com.example.memorymaster.databinding.ActivityGameBinding
+import com.example.memorymaster.model.Card
+import com.example.memorymaster.model.MediaPlayer
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.PrintWriter
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.random.Random
-import kotlin.time.Duration
 
 class GameActivity : AppCompatActivity() {
 
@@ -38,6 +27,7 @@ class GameActivity : AppCompatActivity() {
     private val cardList = ArrayList<Card>()
     private val allCards = ArrayList<Card>()
     private var multi: Boolean? = null
+    private val mediaPlayer: MediaPlayer = MediaPlayer(this@GameActivity)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +40,15 @@ class GameActivity : AppCompatActivity() {
         val spanCount = 2 * difficulty!!
         binding.recyclerViewGameArea.layoutManager = GridLayoutManager(this, spanCount)
         getCards()
+        mediaPlayer.playMainSoundtrack()
+        binding.muteButtonGameActivity.setOnClickListener {
+            mediaPlayer.mutePlayer()
+        }
+    }
+
+    override fun onDestroy() {
+        mediaPlayer.stopPlayer()
+        super.onDestroy()
     }
 
 
@@ -135,13 +134,14 @@ class GameActivity : AppCompatActivity() {
             var counter = 0
             var longString = ""
             cardList.forEach {
-                map.put(counter.toString(), "${it.cardId} -> ${it.cardName} ${it.cardHouse} ")
+                map[counter.toString()] = "${it.cardId} -> ${it.cardName} ${it.cardHouse} "
                 longString += "$counter -> ${it.cardName} ${it.cardHouse} ${it.cardId}\n"
                 counter++
             }
             Log.d("melih", longString)
             //
-            val adapterCard = GameCardAdapter(cardList, this, this@GameActivity, multi)
+            val adapterCard = GameCardAdapter(cardList, this, this@GameActivity,
+                multi, mediaPlayer)
             binding.recyclerViewGameArea.adapter = adapterCard
             //
 
@@ -154,14 +154,14 @@ class GameActivity : AppCompatActivity() {
             val current = LocalDateTime.now().format(formatter)
 
             db.collection("area").document(current).set(map)
-                .addOnSuccessListener { e -> Log.d("melih", "Everything is ok 2.") }
+                .addOnSuccessListener { Log.d("melih", "Everything is ok 2.") }
                 .addOnFailureListener { e -> Log.d("melih", "There is no document ${e.message}") }
 
         }
 
     }
 
-    /*
+
     private fun addCardsDb(cards: ArrayList<Card>) {
         val db = Firebase.firestore
         var counter = 0
@@ -181,7 +181,7 @@ class GameActivity : AppCompatActivity() {
 
                 }
                 .addOnFailureListener { e ->
-                    Log.d("melih", "Problem occured ${e.stackTrace}")
+                    Log.d("melih", "Problem occurred ${e.stackTrace}")
                 }
         }
     }
@@ -191,6 +191,6 @@ class GameActivity : AppCompatActivity() {
         bm?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val b = baos.toByteArray()
         return Base64.encodeToString(b, Base64.DEFAULT)
-    }*/
+    }
 
 }

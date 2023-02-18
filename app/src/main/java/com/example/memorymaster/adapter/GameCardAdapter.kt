@@ -1,6 +1,5 @@
-package com.example.memorymaster
+package com.example.memorymaster.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -8,37 +7,35 @@ import android.graphics.BitmapFactory
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.memorymaster.R
+import com.example.memorymaster.activity.GameActivity
+import com.example.memorymaster.activity.MenuActivity
 import com.example.memorymaster.databinding.RecyclerViewItemBinding
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileReader
-import kotlin.random.Random
+import com.example.memorymaster.model.Card
+import com.example.memorymaster.model.MediaPlayer
 
 class GameCardAdapter(
-    val cardList: ArrayList<Card>,
-    val gameActivity: AppCompatActivity,
-    val parentActivity: GameActivity,
-    val multi:Boolean?
+    private val cardList: ArrayList<Card>,
+    private val gameActivity: AppCompatActivity,
+    private val parentActivity: GameActivity,
+    val multi:Boolean?,
+    val mediaPlayer: MediaPlayer
 ) :
     RecyclerView.Adapter<GameCardAdapter.GameCardHolder>() {
-    var lastPosition = -1
-    var pairCounter = 0
-    var score = 0.0f
-    var context: Context? = null
+    private var lastPosition = -1
+    private var pairCounter = 0
+    private var score = 0.0f
+    private var context: Context? = null
+    private var soundLock = false
     var timeText: TextView? = null
-    var timerStart = false
+    private var timerStart = false
     var remainTime: Long? = null
-    val timeInitValue: Long = 45000
+    val timeInitValue: Long = 10000
+    //val timeInitValue: Long = 45000
 
     private val baseTimer = object : CountDownTimer(timeInitValue, 1000) {
         override fun onTick(milisUntilFinish: Long) {
@@ -47,15 +44,18 @@ class GameCardAdapter(
         }
 
         override fun onFinish() {
-            gameOver()
+            Log.d("melih", "Time is end you lost")
+            mediaPlayer.youLost()
+            mediaPlayer.player.setOnCompletionListener {
+                gameOver()
+            }
         }
     }
 
     private var timer = baseTimer
 
     class GameCardHolder(val binding: RecyclerViewItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     override fun getItemCount(): Int {
         return cardList.size
@@ -73,21 +73,23 @@ class GameCardAdapter(
         val scoreText = gameActivity.findViewById<TextView>(R.id.textViewScore)
         timeText = gameActivity.findViewById(R.id.textViewTime)
         holder.binding.recyclerViewItemImageView.setOnClickListener {
-            if (!timerStart) {
+            if(!timerStart) {
                 timerStart = true
-
                 timer.start()
             }
-            if (lastPosition == -1) {
-                lastPosition = position
+            lastPosition = if(lastPosition == -1) {
+                position
             } else {
-                if (pair(position)) {
+                if(pair(position)) {
                     getPoint(position)
                 } else {
                     reducePoint(position)
+                    // THREAD SLEEP
+                    // FLIP PAIR
+                    // -- COUNT
                 }
                 pairCounter++
-                lastPosition = -1
+                -1
             }
             holder.binding.recyclerViewItemImageView.setImageBitmap(
                 convertStringToImage(
@@ -96,29 +98,18 @@ class GameCardAdapter(
             )
             scoreText.text = "Score: $score"
             if (pairCounter * 2 == cardList.size) {
-                gameOver(holder)
+                timer.cancel()
+                mediaPlayer.youWin()
+                mediaPlayer.player.setOnCompletionListener {
+                    gameOver()
+                }
             }
         }
-    }
-
-
-    private fun gameOver(holder: GameCardHolder) {
-        timer.cancel()
-        restartTimer()
-
-        Log.d("melih", "GAME OVER")
-        val i = Intent(holder.itemView.context, MenuActivity::class.java)
-        i.putExtra("score", score)
-        score = 0.0f
-        lastPosition = -1
-        holder.itemView.context.startActivity(i)
-        parentActivity.finish()
     }
 
     private fun gameOver() {
         timer.cancel()
         restartTimer()
-        Log.d("melih", "GAME OVER")
         val i = Intent(context, MenuActivity::class.java)
         i.putExtra("score", score)
         score = 0.0f
@@ -181,6 +172,7 @@ class GameCardAdapter(
         val totalPoint =
             ((getCardPoint(position) * 2 * getCardHouseK(position)).toFloat()) * (this.remainTime?.div(10000)!!).toFloat()
         score += totalPoint
+        mediaPlayer.correctPair()
     }
 
 

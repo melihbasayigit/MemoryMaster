@@ -1,10 +1,11 @@
-package com.example.memorymaster
+package com.example.memorymaster.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.memorymaster.fragment.DifficultyFragment
+import com.example.memorymaster.R
 import com.example.memorymaster.databinding.ActivityMenuBinding
 
 class MenuActivity : AppCompatActivity() {
@@ -18,13 +19,13 @@ class MenuActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        binding.playSingleplayerButton.setOnClickListener { view ->
+        binding.playSingleplayerButton.setOnClickListener {
             multi = false
-            difficultyFragment(view)
+            difficultyFragment()
         }
-        binding.play2PlayersButton.setOnClickListener { view ->
+        binding.play2PlayersButton.setOnClickListener {
             multi = true
-            difficultyFragment(view)
+            difficultyFragment()
         }
         binding.textViewUserId.text = intent.getStringExtra("uid")
         binding.textViewUserEmail.text = intent.getStringExtra("email")
@@ -36,10 +37,9 @@ class MenuActivity : AppCompatActivity() {
 
     }
 
-    private fun difficultyFragment(view: View) {
+    private fun difficultyFragment() {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-
         val fragment = DifficultyFragment(multi)
         fragmentTransaction.replace(R.id.frameLayout, fragment).commit()
     }

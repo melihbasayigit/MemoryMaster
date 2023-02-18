@@ -1,4 +1,4 @@
-package com.example.memorymaster
+package com.example.memorymaster.activity
 
 import android.content.Intent
 import android.graphics.Bitmap

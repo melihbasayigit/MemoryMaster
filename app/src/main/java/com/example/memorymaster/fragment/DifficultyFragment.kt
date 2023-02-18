@@ -1,27 +1,22 @@
-package com.example.memorymaster
+package com.example.memorymaster.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.Toast
-import androidx.core.view.get
+import com.example.memorymaster.activity.GameActivity
 import com.example.memorymaster.databinding.FragmentDifficultyBinding
 
-class DifficultyFragment(val multi:Boolean) : Fragment() {
+class DifficultyFragment(private val multi:Boolean) : Fragment() {
 
     private var _binding: FragmentDifficultyBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?): View {
         _binding = FragmentDifficultyBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.buttonPlayButton.setOnClickListener {
