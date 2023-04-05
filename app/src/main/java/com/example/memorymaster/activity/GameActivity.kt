@@ -50,6 +50,79 @@ class GameActivity : AppCompatActivity() {
         mediaPlayer.stopPlayer()
         super.onDestroy()
     }
+    private fun createHouseCardLists() {
+        for (card in allCards) {
+            if (card.cardHouse.lowercase() == "hufflepuff") {
+                hufflepuffCards.add(card)
+            } else if (card.cardHouse.lowercase() == "gryffindor") {
+                gryffindorCards.add(card)
+            } else if (card.cardHouse.lowercase() == "ravenclaw") {
+                ravenclawCards.add(card)
+            } else {
+                slytherinCards.add(card)
+            }
+        }
+    }
+    private fun shuffleCardLists() {
+        allCards.shuffle()
+        slytherinCards.shuffle()
+        gryffindorCards.shuffle()
+        ravenclawCards.shuffle()
+        hufflepuffCards.shuffle()
+    }
+
+    private fun prepareCardListByDifficulty() {
+        when (difficulty) {
+            1 -> {
+                for (i in 0..1) {
+                    cardList.add(allCards[i])
+                    allCards.removeAt(i)
+                }
+            }
+            2 -> {
+                for (i in 0..1) {
+                    cardList.add(gryffindorCards[i])
+                    gryffindorCards.removeAt(i)
+                }
+                for (i in 0..1) {
+                    cardList.add(ravenclawCards[i])
+                    ravenclawCards.removeAt(i)
+                }
+                for (i in 0..1) {
+                    cardList.add(slytherinCards[i])
+                    slytherinCards.removeAt(i)
+                }
+                for (i in 0..1) {
+                    cardList.add(hufflepuffCards[i])
+                    hufflepuffCards.removeAt(i)
+                }
+            }
+            else -> {
+                for (i in 0..4) {
+                    cardList.add(gryffindorCards[i])
+                    gryffindorCards.removeAt(i)
+                }
+                for (i in 0..3) {
+                    cardList.add(ravenclawCards[i])
+                    ravenclawCards.removeAt(i)
+                }
+                for (i in 0..4) {
+                    cardList.add(slytherinCards[i])
+                    slytherinCards.removeAt(i)
+                }
+                for (i in 0..3) {
+                    cardList.add(hufflepuffCards[i])
+                    hufflepuffCards.removeAt(i)
+                }
+            }
+        }
+    }
+
+    private fun prepareGameAdapter() {
+        val adapterCard = GameCardAdapter(cardList, this, this@GameActivity,
+            multi, mediaPlayer)
+        binding.recyclerViewGameArea.adapter = adapterCard
+    }
 
 
     private fun getCards() {
@@ -67,66 +140,9 @@ class GameActivity : AppCompatActivity() {
                 allCards.add(card)
             }
 
-            for (card in allCards) {
-                if (card.cardHouse.lowercase() == "hufflepuff") {
-                    hufflepuffCards.add(card)
-                } else if (card.cardHouse.lowercase() == "gryffindor") {
-                    gryffindorCards.add(card)
-                } else if (card.cardHouse.lowercase() == "ravenclaw") {
-                    ravenclawCards.add(card)
-                } else {
-                    slytherinCards.add(card)
-                }
-            }
-            allCards.shuffle()
-            slytherinCards.shuffle()
-            gryffindorCards.shuffle()
-            ravenclawCards.shuffle()
-            hufflepuffCards.shuffle()
-            when (difficulty) {
-                1 -> {
-                    for (i in 0..1) {
-                        cardList.add(allCards[i])
-                        allCards.removeAt(i)
-                    }
-                }
-                2 -> {
-                    for (i in 0..1) {
-                        cardList.add(gryffindorCards[i])
-                        gryffindorCards.removeAt(i)
-                    }
-                    for (i in 0..1) {
-                        cardList.add(ravenclawCards[i])
-                        ravenclawCards.removeAt(i)
-                    }
-                    for (i in 0..1) {
-                        cardList.add(slytherinCards[i])
-                        slytherinCards.removeAt(i)
-                    }
-                    for (i in 0..1) {
-                        cardList.add(hufflepuffCards[i])
-                        hufflepuffCards.removeAt(i)
-                    }
-                }
-                else -> {
-                    for (i in 0..4) {
-                        cardList.add(gryffindorCards[i])
-                        gryffindorCards.removeAt(i)
-                    }
-                    for (i in 0..3) {
-                        cardList.add(ravenclawCards[i])
-                        ravenclawCards.removeAt(i)
-                    }
-                    for (i in 0..4) {
-                        cardList.add(slytherinCards[i])
-                        slytherinCards.removeAt(i)
-                    }
-                    for (i in 0..3) {
-                        cardList.add(hufflepuffCards[i])
-                        hufflepuffCards.removeAt(i)
-                    }
-                }
-            }
+            createHouseCardLists()
+            shuffleCardLists()
+            prepareCardListByDifficulty()
             cardList += cardList
             cardList.shuffle()
             //
@@ -138,14 +154,7 @@ class GameActivity : AppCompatActivity() {
                 longString += "$counter -> ${it.cardName} ${it.cardHouse} ${it.cardId}\n"
                 counter++
             }
-            Log.d("melih", longString)
-            //
-            val adapterCard = GameCardAdapter(cardList, this, this@GameActivity,
-                multi, mediaPlayer)
-            binding.recyclerViewGameArea.adapter = adapterCard
-            //
-
-
+            prepareGameAdapter()
             db.collection("area").document("last_game").set(map)
                 .addOnFailureListener { e -> Log.d("melih", e.message.toString()) }
                 .addOnSuccessListener { Log.d("melih", "Everything is ok 1.") }
@@ -162,6 +171,7 @@ class GameActivity : AppCompatActivity() {
     }
 
 
+    // for admin
     private fun addCardsDb(cards: ArrayList<Card>) {
         val db = Firebase.firestore
         var counter = 0
@@ -186,6 +196,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    //for admin
     private fun encodeImage(bm: Bitmap?): String? {
         val baos = ByteArrayOutputStream()
         bm?.compress(Bitmap.CompressFormat.JPEG, 100, baos)

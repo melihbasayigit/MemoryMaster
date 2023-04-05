@@ -22,7 +22,7 @@ class GameCardAdapter(
     private val cardList: ArrayList<Card>,
     private val gameActivity: AppCompatActivity,
     private val parentActivity: GameActivity,
-    val multi:Boolean?,
+    val multi: Boolean?,
     val mediaPlayer: MediaPlayer
 ) :
     RecyclerView.Adapter<GameCardAdapter.GameCardHolder>() {
@@ -34,8 +34,7 @@ class GameCardAdapter(
     var timeText: TextView? = null
     private var timerStart = false
     var remainTime: Long? = null
-    val timeInitValue: Long = 10000
-    //val timeInitValue: Long = 45000
+    val timeInitValue: Long = 45000
 
     private val baseTimer = object : CountDownTimer(timeInitValue, 1000) {
         override fun onTick(milisUntilFinish: Long) {
@@ -73,29 +72,26 @@ class GameCardAdapter(
         val scoreText = gameActivity.findViewById<TextView>(R.id.textViewScore)
         timeText = gameActivity.findViewById(R.id.textViewTime)
         holder.binding.recyclerViewItemImageView.setOnClickListener {
-            if(!timerStart) {
+            // Timer control
+            if (!timerStart) {
                 timerStart = true
                 timer.start()
             }
-            lastPosition = if(lastPosition == -1) {
+            // Change image
+            holder.binding.recyclerViewItemImageView.setImageBitmap(convertStringToImage(
+                cardList[position].cardImage))
+
+            lastPosition = if (lastPosition == -1) {
                 position
             } else {
-                if(pair(position)) {
+                if (pair(position)) {
                     getPoint(position)
                 } else {
                     reducePoint(position)
-                    // THREAD SLEEP
-                    // FLIP PAIR
-                    // -- COUNT
                 }
-                pairCounter++
                 -1
             }
-            holder.binding.recyclerViewItemImageView.setImageBitmap(
-                convertStringToImage(
-                    cardList[position].cardImage
-                )
-            )
+
             scoreText.text = "Score: $score"
             if (pairCounter * 2 == cardList.size) {
                 timer.cancel()
@@ -170,9 +166,12 @@ class GameCardAdapter(
 
     private fun getPoint(position: Int) {
         val totalPoint =
-            ((getCardPoint(position) * 2 * getCardHouseK(position)).toFloat()) * (this.remainTime?.div(10000)!!).toFloat()
+            ((getCardPoint(position) * 2 * getCardHouseK(position)).toFloat()) * (this.remainTime?.div(
+                10000
+            )!!).toFloat()
         score += totalPoint
         mediaPlayer.correctPair()
+        pairCounter++
     }
 
 
