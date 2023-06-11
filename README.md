@@ -16,7 +16,7 @@ Memory Master Card Game has written by kotlin for Android OS. The game is about 
 
 
 
-[For Turksih Project Documents](https://https://github.com/melihbasayigit/MemoryMaster/blob/main/app/sampledata/memory_master_report.pdf)
+[For Turkish Project Documents](https://https://github.com/melihbasayigit/MemoryMaster/blob/main/app/sampledata/memory_master_report.pdf)
 
 
 ## Roadmap
